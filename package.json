@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@progress/kendo-charts-vue-wrapper": "^2018.3.1025",
+    "@progress/kendo-datasource-vue-wrapper": "^2018.3.1025",
     "@progress/kendo-theme-default": "^2.62.0",
     "@progress/kendo-ui": "^2018.3.1219",
     "vue": "^2.5.11"
