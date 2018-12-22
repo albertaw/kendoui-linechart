@@ -1,13 +1,20 @@
 <template>
   <div id="app">
+    <kendo-datasource 
+      ref="dataSource"
+      :transport-read-url="'./src/OHLC.json'"
+      :transport-read-data-type="'json'"
+      :schema-parse="schemaParse">
+    </kendo-datasource>
     <kendo-chart
-      :title-text="'Bitcoin Prices'"
+      :data-source-ref="'dataSource'"
+      :title-text="'Dash Prices'"
       :legend-position="'bottom'"
       :tooltip-visible="true"
       :tooltip-template="'$#: value #'"
       :series="series"
-      :category-axis-categories="categories"
-      :value-axis="axis">
+      :category-axis="categoryAxis"
+      :value-axis="valueAxis">
     </kendo-chart>
   </div>
 </template>
@@ -20,15 +27,29 @@ export default {
       series: [{
         type: 'line',
         name: 'Price',
-        data: [6316.77, 6513.70, 6477.32, 6367.24, 6402.62, 5594.97, 3768.79, 4191.90, 3493.53, 3272.31],
+        field: 'Volume'
       }],
-      categories: ['10/14/2018','10/21/2018','10/28/2018','11/04/2018','11/11/2018','11/18/2018','11/25/2018','12/02/2018', '12/09/2018', '12/16/2018'],
-      axis: [{
-        name: 'temperature',
+      categoryAxis: {
+        field: 'Date'
+      },
+      valueAxis: {
         labels: {
-          format: "${0}"
+          format: '${0}'
         }
-      }]
+      }
+    }
+  },
+  methods: {
+    schemaParse: function(response) {
+      return response.result.DASHUSD.map(function(arr) {
+        let utcSeconds = arr[0];
+        let date = new Date(0);
+        date.setUTCSeconds(utcSeconds);
+        return {
+          Date: date,
+          Volume: arr[6]
+        }
+      })
     }
   }
 }
